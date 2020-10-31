@@ -102,8 +102,3 @@ def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
             if plaintext in dictionary:
                 best_shift=shift
                 return best_shift
-
-
-
-d = {"python", "java", "ruby"}
-print(caesar_breaker_brute_force("ruby", d))
