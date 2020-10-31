@@ -66,7 +66,3 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
     plaintext=plaintext.join(arr)
     print(plaintext)
     return plaintext
-
-encrypt_vigenere("introduction to python", "lsci")
-#, "tfvzzvwkeaqv lq aqvpzf"
-decrypt_vigenere("tfvzzvwkeaqv lq aqvpzf", "lsci")
