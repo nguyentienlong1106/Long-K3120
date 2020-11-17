@@ -204,6 +204,8 @@ def check_solution(solution: tp.List[tp.List[str]]) -> bool:
         for y in range(len(solution[x])):
             pos=(x,y)
             a=solution[x][y]
+            if a == ".":
+                return False
             #check row
             for i in range(len(solution[0])):
                 if solution[pos[0]][i] == a and pos[1] != i:
