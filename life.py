@@ -72,7 +72,7 @@ class GameOfLife:
                         Grid[i][j] = 1
                     else:
                         Grid[i][j] = 0
-        self.curr_generation=Grid
+        self.curr_generation = Grid
         return self.curr_generation
         pass
 
