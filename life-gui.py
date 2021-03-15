@@ -4,6 +4,13 @@ from pygame.locals import *
 from life import GameOfLife
 from ui import UI
 
+import argparse
+
+parser = argparse.ArgumentParser(description='data')
+parser.add_argument('-width','--width', type=int, help='width of data')
+parser.add_argument('-height','--height', type=int, help='height of data')
+parser.add_argument('-cell-size','--cellsize', type=int, help='cellsize of data')
+args = parser.parse_args()
 
 class GUI(UI):
 
@@ -27,8 +34,8 @@ class GUI(UI):
         pass
 
     def draw_grid(self) -> None:
-        for i in range(self.life.cols):
-            for j in range(self.life.rows):
+        for i in range(self.life.rows):
+            for j in range(self.life.cols):
                 if self.life.curr_generation[i][j] == 1:
                     color = pygame.Color('green')
                 else:
@@ -71,7 +78,9 @@ class GUI(UI):
                         pausa = not pausa             
             
         pass
-
-life = GameOfLife((10, 10), False)
-gui = GUI(life, 50, 2)
-gui.run()
+if __name__ == '__main__':
+    r = int(args.width//args.cellsize)
+    c = int(args.height//args.cellsize)
+    life = GameOfLife((r, c), False)
+    gui = GUI(life, args.cellsize , 1)
+    gui.run()

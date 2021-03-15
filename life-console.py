@@ -4,6 +4,13 @@ from life import GameOfLife
 from ui import UI
 
 from time import sleep
+import argparse
+
+parser = argparse.ArgumentParser(description='data')
+parser.add_argument('-rows', '--rows', type=int, help='rows of data')
+parser.add_argument('-cols', '--cols', type=int, help='cols of data')
+parser.add_argument('-max-generations', '--maxgenerations', type=int, help='max-generations of data')
+agrs = parser.parse_args()
 
 class Console(UI):
 
@@ -42,6 +49,7 @@ class Console(UI):
             for j in range(self.life.cols):
                 if self.life.curr_generation[i][j] == 1:
                     self.screen.addch(i + 1, j + 1, "*")
+
         self.screen.refresh()
                     
 
@@ -58,7 +66,7 @@ class Console(UI):
             self.life.step()
         curses.endwin()
 
-
-life = GameOfLife((20, 20), max_generations=50)
-ui = Console(life)
-ui.run()
+if __name__ == "__main__":
+    life = GameOfLife((agrs.rows, agrs.cols), agrs.maxgenerations)
+    ui = Console(life)
+    ui.run()

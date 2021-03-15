@@ -112,7 +112,7 @@ class GameOfLife:
         file = open(filename)
         grid = file.readlines()
         for i in range(len(grid)):
-            grid[i] = list(map(int, grid[i][0:len(grid[i])-2 ]))
+            grid[i] = list(map(int, grid[i][0:len(grid[i])-1]))
             self.curr_generation = grid
             life = GameOfLife((len(grid[0]), len(grid)))
             file.close()
