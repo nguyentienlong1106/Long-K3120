@@ -40,12 +40,12 @@ class GUI(UI):
                     color = pygame.Color('green')
                 else:
                     color = pygame.Color('white')
-                pygame.draw.rect(self.screen,color,(j*self.cell_size,i*self.cell_size,self.cell_size,self.cell_size))
+                pygame.draw.rect(self.screen,color,(i*self.cell_size,j*self.cell_size,self.cell_size,self.cell_size))
     def run(self) -> None:
         # Copy from previous assignment
         pygame.init()
         clock = pygame.time.Clock()
-        pygame.display.set_caption('Game of Life')
+        pygame.display.set_caption('Game of Life') 
         self.screen.fill(pygame.Color('white'))
         running = True
         pausa = False
@@ -63,8 +63,8 @@ class GUI(UI):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         x_mouse, y_mouse = pygame.mouse.get_pos()
-                        column = x_mouse // self.cell_size
-                        row = y_mouse // self.cell_size
+                        column = y_mouse // self.cell_size
+                        row = x_mouse // self.cell_size
                         self.life.curr_generation=life.prev_generation
                         if self.life.curr_generation[row][column] == 0:
                             self.life.curr_generation[row][column] = 1
@@ -78,9 +78,15 @@ class GUI(UI):
                         pausa = not pausa             
             
         pass
+    
 if __name__ == '__main__':
     r = int(args.width//args.cellsize)
     c = int(args.height//args.cellsize)
     life = GameOfLife((r, c), False)
-    gui = GUI(life, args.cellsize , 1)
+    gui = GUI(life, args.cellsize , 10)
     gui.run()
+'''
+life = GameOfLife((10, 15), True)
+gui = GUI(life, 50)
+gui.run()
+'''

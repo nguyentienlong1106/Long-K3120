@@ -21,52 +21,51 @@ class Console(UI):
 
 
     def draw_borders(self, screen) -> None:
-        
-        r = self.life.rows + 1
-        c = self.life.cols + 1
-        self.screen = curses.newwin(r + 2, c + 2, 0, 0)
-        for i in range(r + 1):
-            for j in range(c + 1):
-                if i == 0:
-                    if j == 0 or j == c:
-                        self.screen.addch(0, j, "+")
-                    else:
-                        self.screen.addch(0, j, "-")
-                elif i == r:
-                    if j == 0 or j == c:
-                        self.screen.addch(i, j, "+")
-                    else:
-                        self.screen.addch(i, j, "-")
-                else:
-                    if j == 0 or j == c:
-                        self.screen.addch(i, j, "|")
+        r = self.life.rows 
+        c = self.life.cols 
+        self.screen = curses.newwin(c + 1, r + 1, 0, 0)
+        self.screen.border('|', '|', '-', '-', '+', '+', '+', '+')
         self.screen.refresh()
+        pass
 
 
     def draw_grid(self, screen) -> None:
         
-        for i in range(self.life.rows):
-            for j in range(self.life.cols):
+        for i in range(1,self.life.rows):
+            for j in range(1,self.life.cols):
                 if self.life.curr_generation[i][j] == 1:
-                    self.screen.addch(i + 1, j + 1, "*")
-
+                    self.screen.addch(j , i , "*")
+                else:
+                    self.screen.addstr(j , i , " ")
         self.screen.refresh()
                     
 
     def run(self) -> None:
         
         self.screen = curses.initscr()
+        curses.curs_set(0)
         curses.noecho()
         curses.cbreak()
+        self.screen.keypad(True)
         while True:
             self.screen.erase()
             self.draw_borders(self.screen)
             self.draw_grid(self.screen)
             sleep(1)
             self.life.step()
+            
+        curses.echo()
+        curses.nocbreak()
+        self.screen.keypad(False)
         curses.endwin()
 
 if __name__ == "__main__":
     life = GameOfLife((agrs.rows, agrs.cols), agrs.maxgenerations)
     ui = Console(life)
     ui.run()
+
+'''
+life = GameOfLife((15,10), max_generations=50)
+ui = Console(life)
+ui.run()
+'''
