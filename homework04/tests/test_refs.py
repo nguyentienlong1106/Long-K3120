@@ -7,7 +7,7 @@ from pyvcs.refs import get_ref, is_detached, ref_resolve, resolve_head, update_r
 from pyvcs.repo import repo_create
 
 
-@unittest.skipIf(pyvcs.__version_info__ < (0, 7, 0), "Нужна версия пакета 0.7.0 и выше")
+
 class ReferencesTestCase(TestCase):
     def setUp(self):
         self.setUpPyfakefs()
