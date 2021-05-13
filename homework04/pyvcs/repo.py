@@ -4,42 +4,36 @@ import typing as tp
 
 
 def repo_find(workdir: tp.Union[str, pathlib.Path] = ".") -> pathlib.Path:
-    gitdir_name = os.environ["GIT_DIR"] if "GIT_DIR" in os.environ else ".pyvcs"
-
+    if "GIT_DIR" in os.environ:
+        gitdir_name = os.environ.get("GIT_DIR", default=".git")
+    else:
+        gitdir_name = pathlib.Path(".git")
     while os.path.isdir(workdir):
         if os.path.isdir(workdir / pathlib.Path(gitdir_name)):
             return pathlib.Path(workdir) / gitdir_name
         if workdir == ".":
             break
-        workdir = pathlib.Path(workdir).parent
-
+        workdir = pathlib.Path(workdir.parent)
     raise Exception("Not a git repository")
 
 
-
 def repo_create(workdir: tp.Union[str, pathlib.Path]) -> pathlib.Path:
-    gitdir_name = os.environ["GIT_DIR"] if "GIT_DIR" in os.environ else ".pyvcs"
-    workdir = pathlib.Path(workdir)
-    if workdir.is_file():
+    if os.path.isfile(workdir):
         raise Exception(f"{workdir} is not a directory")
-    (workdir / gitdir_name).mkdir()
-    HEAD = "HEAD"
-    with open(workdir / gitdir_name / HEAD, "w") as f:
-        f.write("ref: refs/heads/master\n")
-    config = "config"
-    with open(workdir / gitdir_name / config, "w") as f:
-        f.write(
+    if "GIT_DIR" in os.environ:
+        gitdir_name = workdir / pathlib.Path(os.environ["GIT_DIR"])
+    else:
+        gitdir_name = workdir / pathlib.Path(".git")
+    os.mkdir(gitdir_name)
+    os.makedirs(gitdir_name / "refs" / "heads")
+    os.mkdir(gitdir_name / "refs" / "tags")
+    os.mkdir(gitdir_name / "objects")
+    with (gitdir_name / "HEAD").open("w") as head:
+        head.write("ref: refs/heads/master\n")
+    with (gitdir_name / "config").open("w") as config:
+        config.write(
             "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n\tlogallrefupdates = false\n"
         )
-    description = "description"
-    with open(workdir / gitdir_name / description, "w") as f:
-        f.write("Unnamed pyvcs repository.\n")
-    objects = "objects"
-    (workdir / gitdir_name / objects).mkdir()
-    refs = "refs"
-    (workdir / gitdir_name / refs).mkdir()
-    heads = "heads"
-    (workdir / gitdir_name / refs / heads).mkdir()
-    tags = "tags"
-    (workdir / gitdir_name / refs / tags).mkdir()
-    return workdir / gitdir_name
+    with (gitdir_name / "description").open("w") as description:
+        description.write("Unnamed pyvcs repository.\n")
+    return gitdir_name
