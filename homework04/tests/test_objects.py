@@ -11,7 +11,7 @@ import pyvcs
 from pyvcs import index, objects, porcelain, repo, tree
 
 
-
+@unittest.skipIf(pyvcs.__version_info__ < (0, 2, 0), "Нужна версия пакета 0.2.0 и выше")
 class HashObjectTestCase(TestCase):
     def setUp(self):
         self.setUpPyfakefs()
@@ -51,7 +51,7 @@ class HashObjectTestCase(TestCase):
         self.assertEqual(expected_sha, sha)
 
 
-
+@unittest.skipIf(pyvcs.__version_info__ < (0, 3, 0), "Нужна версия пакета 0.3.0 и выше")
 class ResolveObjectTestCase(TestCase):
     def setUp(self):
         self.setUpPyfakefs()
@@ -114,7 +114,7 @@ class ResolveObjectTestCase(TestCase):
         self.assertEqual(f"Not a valid object name {obj_name}", str(ctx.exception))
 
 
-
+@unittest.skipIf(pyvcs.__version_info__ < (0, 3, 0), "Нужна версия пакета 0.3.0 и выше")
 class ReadObjectTestCase(TestCase):
     def setUp(self):
         self.setUpPyfakefs()
@@ -131,7 +131,7 @@ class ReadObjectTestCase(TestCase):
         self.assertEqual(b"that's what she said", data)
 
 
-
+@unittest.skipIf(pyvcs.__version_info__ < (0, 3, 0), "Нужна версия пакета 0.3.0 и выше")
 class CatFileTestCase(TestCase):
     def setUp(self):
         self.setUpPyfakefs()
@@ -148,7 +148,7 @@ class CatFileTestCase(TestCase):
             objects.cat_file("7e774cf533c51803125d4659f3488bd9dffc41a6", pretty=True)
             self.assertEqual("that's what she said", out.getvalue().strip())
 
-
+    @unittest.skipIf(pyvcs.__version_info__ < (0, 6, 0), "Нужна версия пакета 0.6.0 и выше")
     def test_cat_tree_file(self):
         gitdir = repo.repo_create(".")
         mode100644 = stat.S_IFREG | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH
@@ -175,7 +175,7 @@ class CatFileTestCase(TestCase):
             objects.cat_file(sha, pretty=True)
             self.assertEqual(expected_output, out.getvalue().strip())
 
-
+    @unittest.skipIf(pyvcs.__version_info__ < (0, 6, 0), "Нужна версия пакета 0.6.0 и выше")
     def test_cat_commit_file(self):
         gitdir = repo.repo_create(".")
         obj = b"x\x9c\x95\x8dA\n\x021\x0c\x00=\xf7\x15\xb9\x0b\x92\x92ljA\xc4\x83\x1fI\xdb,\x16\xec.\x94.\xb8\xbf\x17\x14\x1f\xe0m.3\x93\xd7\xd6\xea\x00\x1f\xe80\xba\x19`&d\x942G5\x9d8\x85\xb9H\xe23\t\xb2\x0f6EMASL\xc9\xe96\x1ek\x87\xbb5[F\xdd\xe1\xf2\xa3\xdb\xaeK\xb1\xd7\xa9oW\xf0\x82\xc4\xc8$\x02G$D\x97?\xbba\x7f\x8b\xae.uT}\xc2\xb7\xe0\xde\xa159\x17"
