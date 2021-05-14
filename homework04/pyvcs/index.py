@@ -75,7 +75,7 @@ def read_index(gitdir: pathlib.Path) -> tp.List[GitIndexEntry]:
                 break
         ind += [GitIndexEntry.unpack(main_content_copy[: end_position + 1])]
         if len(main_content_copy) != end_position - 1:
-            main_content_copy = main_content_copy[end_position + 1 :]
+            main_content_copy = main_content_copy[end_position + 1:]
     return ind
 
 
