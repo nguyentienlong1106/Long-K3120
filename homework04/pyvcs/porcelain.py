@@ -16,17 +16,18 @@ from pyvcs.tree import commit_tree, write_tree
 
 
 def add(gitdir: pathlib.Path, paths: tp.List[pathlib.Path]) -> None:
-    for path in paths:
-        if path.is_file():
-            update_index(gitdir, [path], write=True)
-        if path.is_dir():
-            add(gitdir, list(path.glob("*")))
+    for line in paths:
+        if line.is_dir():
+            add(gitdir, list(line.glob("*")))
+        if line.is_file():
+            update_index(gitdir, [line], write=True)
+
 
 
 def commit(gitdir: pathlib.Path, message: str, author: tp.Optional[str] = None) -> str:
     tree = write_tree(gitdir, read_index(gitdir))
-    com = commit_tree(gitdir, tree, message, author=author)
-    return com
+    commit = commit_tree(gitdir, tree, message, author=author)
+    return commit
 
 
 def checkout(gitdir: pathlib.Path, obj_name: str) -> None:
@@ -35,11 +36,11 @@ def checkout(gitdir: pathlib.Path, obj_name: str) -> None:
             os.remove(entry.name)
         except FileNotFoundError:
             pass
-    com = commit_parse(read_object(obj_name, gitdir)[1])
+    commit = commit_parse(read_object(obj_name, gitdir)[1])
     stopped = False
     while not stopped:
         trees: tp.List[tp.Tuple[pathlib.Path, tp.List[tp.Tuple[int, str, str]]]]
-        trees = [(gitdir.parent, read_tree(read_object(com["tree"], gitdir)[1]))]
+        trees = [(gitdir.parent, read_tree(read_object(commit["tree"], gitdir)[1]))]
         while trees:
             tree_path, tree_content = trees[-1]
             del trees[-1]
@@ -54,9 +55,9 @@ def checkout(gitdir: pathlib.Path, obj_name: str) -> None:
                         with (tree_path / file_data[1]).open("wb") as f:
                             f.write(data)
                         (tree_path / file_data[1]).chmod(int(str(file_data[0]), 8))
-        if "parent" in com:
-            parse = commit_parse((read_object(com["parent"], gitdir)[1]))
-            com[parse[0]] = parse[1]
+        if "parent" in commit:
+            parse = commit_parse((read_object(commit["parent"], gitdir)[1]))
+            commit[parse[0]] = parse[1]
         else:
             stopped = True
     for dir in gitdir.parent.glob("*"):

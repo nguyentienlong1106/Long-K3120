@@ -50,12 +50,14 @@ def commit_tree(
     timestamp = int(time.mktime(time.localtime()))
     timezone = time.timezone if (time.localtime().tm_isdst == 0) else time.altzone
     timezone = int(timezone / 60 / 60 * -1)
-    if timezone > 0:
-        tz_offset = f"+0{timezone}00"
-    elif timezone < 0:
+
+    if timezone < 0:
         tz_offset = f"-0{timezone}00"
+    elif timezone > 0:
+        tz_offset = f"+0{timezone}00"
     else:
         tz_offset = "0000"
+
     author_name = os.getenv("GIT_AUTHOR_NAME")           # == os.environ["GIT_AUTHOR_NAME"]
     email = os.getenv("GIT_AUTHOR_EMAIL")
     if email or author_name:
