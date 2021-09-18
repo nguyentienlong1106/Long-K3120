@@ -197,19 +197,33 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
     # TODO: Add doctests with bad puzzles
-    for i in range(9):
-        a=set(get_row(solution,(i,0)))
-        if len(a)!=9:
-            return False
-        b=set(get_col(solution,(0,i)))
-        if len(b)!=9:
-            return False
-    x=(1,4,7)
-    for i in x:
-        for j in x:
-            c=set(get_block(solution,(i,j)))
-            if len(c)!=9:
+    
+    pos=(0,0)
+    a=0
+    for x in range(len(solution)):
+        for y in range(len(solution[x])):
+            pos=(x,y)
+            a=solution[x][y]
+            if a == ".":
                 return False
+            #check row
+            for i in range(len(solution[0])):
+                if solution[pos[0]][i] == a and pos[1] != i:
+                    return False
+
+            # Check column
+            for i in range(len(solution)):
+                if solution[i][pos[1]] == a and pos[0] != i:
+                    return False
+
+            # Check box
+            box_x = pos[1] // 3
+            box_y = pos[0] // 3
+
+            for i in range(box_y*3, box_y*3 + 3):
+                for j in range(box_x * 3, box_x*3 + 3):
+                    if solution[i][j] == a and (i,j) != pos:
+                        return False
     return True
     pass
 
@@ -241,11 +255,12 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     for i in r:
         row=[]
         for j in r:
-            row.append(int(1+(j*10/3+i)%9))
+            a=int(1+(j*10/3+i)%9)
+            row.append(str(a))
         grid.append(row)
 
     if N>=81:
-        print(grid)
+        return grid
     else:
         i=0
         while i<(81-N):
@@ -256,8 +271,7 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
                 b=randrange(9)
             grid[a][b]="."
             i+=1
-    print(grid)
-
+    return grid
 
     pass
 
@@ -271,4 +285,3 @@ if __name__ == "__main__":
             print(f"Puzzle {fname} can't be solved")
         else:
             display(solution)
-
